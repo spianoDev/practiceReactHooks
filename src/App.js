@@ -17,6 +17,7 @@ function App() {
 
     return(
         <div>
+            <pre> {JSON.stringify(user)}</pre>
             <p>User: {search}</p>
             <input onChange={e => setSearch(e.target.value)} placeholder="Github Username"/>
             <button onClick={searchGitHub}>Search</button>
