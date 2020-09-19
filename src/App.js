@@ -1,35 +1,29 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
+import React, {Component, useState} from "react";
 import axios from 'axios'
-
-const BASEURL = "https://api.giphy.com/v1/gifs/search?q=";
-const APIKEY = "&api_key=dc6zaTOxFJmzC&limit=20";
+import User from './Components/User'
+import "./App.css";
 
 function App() {
-    const [results, setResults] = useState([]);
-    const [query, setQuery] = useState('kittens')
+    const [search, setSearch] = useState("");
+    const[user, setUser] = useState(null);
 
-// use effect takes in a function
-    useEffect(() => {
-        searchGify(query)
-    }, [query]); // an empty array will ask this to run only once
-    // if you ever want to rerun your method, you set the query inside the array
-// you cannot put asynchronous code inside the use effect function
+    const searchGitHub = async () => {
+  if (search === '') return;
+  // this will make everything that happens after the search wait until the search is done.
+  const res = await axios.get(`https://api.github.com/users/${search}`);
+  setUser(res.data);
 
-    const searchGify = query => {
-        console.log('Searching Giffy...');
-        axios(`${BASEURL}${query}${APIKEY}`)
-            .then(response => setResults(response.data.data))
-            .catch(err=> console.log(err))
-    };
+};
 
-  return (
-    <div className="App">
-        <input onChange={e => setQuery(e.target.value)} />
-        <br/>
-      {results.map(result => <img src={result.images.original.url} key={result.id}/>)}
-    </div>
-  );
+    return(
+        <div>
+            <p>User: {search}</p>
+            <input onChange={e => setSearch(e.target.value)} placeholder="Github Username"/>
+            <button onClick={searchGitHub}>Search</button>
+            {/*this adds a conditional */}
+            {user && <User user = {user}/>}
+
+        </div>
+    )
 }
-
 export default App;
